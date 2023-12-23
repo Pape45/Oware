@@ -1,16 +1,20 @@
 CC = gcc
-CFLAGS = -I include
-LDFLAGS = -L lib
+CFLAGS = -Iinclude
+LDFLAGS = -Llib
 LDLIBS = -lSDL2-2.0.0
 
-SRC = main.c
+SRC = $(wildcard src/*.c)
 OBJ = $(SRC:.c=.o)
-EXEC = main
+EXEC = bin/game
 
 all: $(EXEC)
+	rm -f $(OBJ)
 
 $(EXEC): $(OBJ)
-	$(CC) -o $@ $^ $(CFLAGS) $(LDFLAGS) $(LDLIBS)
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LDLIBS)
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
 	rm -f $(OBJ) $(EXEC)
