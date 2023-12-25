@@ -27,6 +27,7 @@ void initializePlayers(player* player1, player* player2) {
         player2->hole[i] = 3;
     }
 
+    // player2->hole[4] = 2;
     player1->score = 0; 
     player2->score = 0;
 }

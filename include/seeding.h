@@ -1,8 +1,8 @@
-#include "player.h"
 #ifndef SEEDING_H
 #define SEEDING_H
 
-void seeding(int option, int realHoleIndex, player *currentPlayer, player *opponent);
-void seedingStage(player* player1, player* player2);
+#include "player.h"
 
+int seedingStage(player* currentPlayer, player* opponent, bool* isTheRightCase);
+int seeding(int option, int realHoleIndex, player *currentPlayer, player *opponent, bool* isTheRightCase);
 #endif

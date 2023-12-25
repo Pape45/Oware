@@ -1,5 +1,5 @@
-#ifndef HEADER1_H
-#define HEADER1_H
+#ifndef PLAYER_H
+#define PLAYER_H
 
 typedef struct player{
     char name[100];
