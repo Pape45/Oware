@@ -1,0 +1,39 @@
+# Oware.c : Game Logic without function
+
+        // isThereAHarvest = false;
+        // *isTheRightIndex= false ;
+        // displayGame(player1, player2, gameTurn);
+        // rightHoleToHarvest = seedingStage(player1, player2, isTheRightIndex);
+        
+        // if (*isTheRightIndex) {
+        //     isThereAHarvest = harvestStage(player1, player2, rightHoleToHarvest);
+        // }
+
+        // if (isThereAHarvest) {
+        //     turnWithoutHarvest = 0;
+        // } else {
+        //     turnWithoutHarvest++;
+        // }
+        
+        // if (endGame(player1, player2, turnWithoutHarvest, gameTurn)) {
+        //     break;
+        // }
+
+        // isThereAHarvest = false;
+        // *isTheRightIndex = false;
+        // displayGame(player2, player1, gameTurn);
+        // rightHoleToHarvest = seedingStage(player2, player1, isTheRightIndex);
+
+        // if (*isTheRightIndex) {
+        //     isThereAHarvest = harvestStage(player2, player1, rightHoleToHarvest);
+        // }
+
+        // if (isThereAHarvest) {
+        //     turnWithoutHarvest = 0;
+        // } else {
+        //     turnWithoutHarvest++;
+        // }
+
+        // if (endGame(player2, player1, turnWithoutHarvest, gameTurn)) {
+        //     break;
+        // }
