@@ -37,19 +37,11 @@ int seedingStage(player* currentPlayer, player* opponent, bool* isTheRightCase) 
         rightIndex = seeding(1, realHoleIndex, currentPlayer, opponent, isTheRightCase);
     } else if (checkOverFilling >= 6 && checkOverFilling < 12) {
         rightIndex = seeding(2, realHoleIndex, currentPlayer, opponent, isTheRightCase);
-    } else {
+    } else if (checkOverFilling >= 12 && checkOverFilling < 18) {
         rightIndex = seeding(3, realHoleIndex, currentPlayer, opponent, isTheRightCase);
+    } else {
+        rightIndex = seeding(4, realHoleIndex, currentPlayer, opponent, isTheRightCase);
     }
-
-    // printf("\nCurrent player : ");
-    // for (int j = 0; j < 6; j++) {
-    //     printf("%d", currentPlayer->hole[j]);        
-    // }
-
-    // printf("\nOpponent : ");
-    // for (int j = 0; j < 6; j++) {
-    //     printf("%d", opponent->hole[j]);        
-    // }
 
     return rightIndex;
 }
@@ -58,7 +50,6 @@ int seeding(int option, int realHoleIndex, player *currentPlayer, player *oppone
     int holeFillingStart, holeFillingStop, indexToEscape;
     int remainingBalls = currentPlayer->hole[realHoleIndex];
     int i;
-    bool trueValue = true;
 
     if (option == 1) {
         holeFillingStart = realHoleIndex + 1;
@@ -83,9 +74,28 @@ int seeding(int option, int realHoleIndex, player *currentPlayer, player *oppone
             opponent->hole[i]++;
         }
 
-        isTheRightCase = &trueValue;
-        // rightHoleToIndex = ;
-        // printf("Right hole %d", *rightHoleToIndex);
+        *isTheRightCase = true;
+
+    } else if (option == 3) {
+        holeFillingStart = realHoleIndex + 1;
+        holeFillingStop = 5;
+        indexToEscape = realHoleIndex;
+
+        for (i = holeFillingStart; i <= holeFillingStop; i++) {
+            currentPlayer->hole[i]++;
+            remainingBalls--;
+        }
+
+        for (i = 5; i >= 0; i--) {
+            opponent->hole[i]++;
+            remainingBalls--;
+        }
+
+        printf("Remaining : %d", remainingBalls);
+
+        for (i = 0; i < remainingBalls; i++) {
+            currentPlayer->hole[i]++;
+        }
     } else {
         holeFillingStart = realHoleIndex + 1;
         holeFillingStop = 5;
@@ -101,16 +111,25 @@ int seeding(int option, int realHoleIndex, player *currentPlayer, player *oppone
             remainingBalls--;
         }
 
-        for (i = 0; i <= remainingBalls; i++) {
+        printf("\nremaining : %d\n", remainingBalls);
+        for (i = 0; i < 5; i++) {
             if (i == realHoleIndex) {
                 continue;
             } else {
                 currentPlayer->hole[i]++;
+                remainingBalls--;
             }
         }
+        
+        holeFillingStop = 5 - remainingBalls;
+
+        for (i = 5; i > holeFillingStop; i--) {
+            opponent->hole[i]++;
+        }
+
+        *isTheRightCase = true;
     }
 
     currentPlayer->hole[realHoleIndex] = 0;
-    return holeFillingStop + 1;
-
+    return ++holeFillingStop;
 }

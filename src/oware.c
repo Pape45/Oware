@@ -11,9 +11,11 @@
 int main(int argc, const char *argv[]) {
     player* player1 = malloc(sizeof(player)); 
     player* player2 = malloc(sizeof(player));
-    int rightHoleToHarvest = 0, turnNumber = 0;
+    int rightHoleToHarvest = 0;
+    int* turnWithoutHarvest = malloc(sizeof(int));
     bool* isTheRightIndex = malloc(sizeof(bool));
-    bool falseValue = false;
+    bool isThereAHarvest = false;
+    int gameTurn = 1;
 
     if (player1 == NULL || player2 == NULL) {
         fprintf(stderr, "Memory allocation failed, please debug :)\n");
@@ -21,20 +23,15 @@ int main(int argc, const char *argv[]) {
     }
     
     initializePlayers(player1, player2);
-    displayGame(player1, player2);
-    rightHoleToHarvest = seedingStage(player1, player2, isTheRightIndex);
-    harvestStage(player1, player2, rightHoleToHarvest);
-    isTheRightIndex = &falseValue;
-    
-    printf("\nCurrent player : ");
-    for (int j = 0; j < 6; j++) {
-        printf("%d", player1->hole[j]);        
-    }
 
-    printf("\nOpponent : ");
-    for (int j = 0; j < 6; j++) {
-        printf("%d", player2->hole[j]);        
-    }
+    player1->score = 18;
+
+    do {
+        if (letsPlay(player1, player2, turnWithoutHarvest, gameTurn) || letsPlay(player2, player1, turnWithoutHarvest, gameTurn)) {
+            break;
+        }
+        gameTurn++;
+    } while (1);
 
     free(player1);
     free(player2);
@@ -42,19 +39,48 @@ int main(int argc, const char *argv[]) {
     return 1;
 }
 
-void displayGame(const player* player1, const player* player2) {
-    printf("\n-------------------------------------------------------------------------------------------------\n");
-    printf("Player 1 (%s)\n\n", player1->name);
-    displayHoles(player1);
-    printf("\nScore: %d\n", player1->score);
+int letsPlay(player* player1, player* player2, int* turnWithoutHarvest, int gameTurn) {
+    bool isThereAHarvest = false;
+    bool* isTheRightIndex = malloc(sizeof(bool));
+    int rightHoleToHarvest = 0;
 
-    printf("\n-------------------------------------------------------------------------------------------------\n");
-    printf("Player 2 (%s)\n\n", player2->name);
-    displayHoles(player2);
-    printf("\nScore: %d\n", player2->score);
-    printf("-------------------------------------------------------------------------------------------------\n");
+    *isTheRightIndex = false;
+    displayGame(player1, player2, gameTurn);
+    rightHoleToHarvest = seedingStage(player1, player2, isTheRightIndex);
+    
+    if (*isTheRightIndex) {
+        isThereAHarvest = harvestStage(player1, player2, rightHoleToHarvest);
+    }
+
+    if (isThereAHarvest) {
+        *turnWithoutHarvest = 0;
+    } else {
+        *turnWithoutHarvest = *turnWithoutHarvest + 1;
+    }
+    
+    if (endGame(player1, player2, turnWithoutHarvest, gameTurn)) {
+        return 1;
+    }   
+
+    return 0;
 }
 
+void displayGame(const player* currentPlayer, const player* opponent, int currentTurn) {
+    printf("\n-------------------------------------------------------------------------------------------------\n");
+
+    printf("(%s)\n\n", opponent->name);
+    displayHoles(opponent);
+    printf("\nScore: %d\n", opponent->score);
+
+    printf("\n-------------------------------------------------------------------------------------------------\n");
+
+    printf("(%s)\n\n", currentPlayer->name);
+    displayHoles(currentPlayer);
+    printf("\nScore: %d\n", currentPlayer->score);
+    printf("\nTour : %d\n", currentTurn);
+
+    printf("-------------------------------------------------------------------------------------------------\n");
+}
 void displayHoles(const player* currentPlayer) {
     printf("| ");
     for (int i = 0; i < 6; i++) {
