@@ -1,3 +1,8 @@
+/**
+ * Implémentation de la logique de récolte. 
+ * S'il y a eu récolte, on renverra TRUE à oware.c. Cela nous permettra de compter en temps réel le nombre de tours sans récolte.
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>

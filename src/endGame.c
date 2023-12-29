@@ -1,3 +1,7 @@
+/**
+ * Implémentation de la logique de fin du jeu conformément au PDF fourni.
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -8,7 +12,6 @@
 bool endGame(player* player1, player* player2, int* turnWithoutHarvest, int gameTurn) {
     int i = 0, j = 0;
     player* winner;
-    bool isRemainingBalls = false;
 
     if (player1->score >= 19 || player2->score >= 19) {
         displayGame(player1, player2, gameTurn);

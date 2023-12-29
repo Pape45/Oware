@@ -5,6 +5,6 @@
 
 void displayGame(const player* currentPlayer, const player* opponent, int currentTurn);
 void displayHoles(const player* currentPlayer);
-int letsPlay(player* player1, player* player2, int* turnWithoutHarvest, int gameTurn);
+int letsPlay(player* player1, player* player2, int* turnWithoutHarvest, bool* isTheRightIndex,int gameTurn);
 
 #endif

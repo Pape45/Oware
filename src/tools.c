@@ -1,3 +1,7 @@
+/**
+ * Fonctions utilitaires pour la saisie de données
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -16,10 +20,10 @@ int lire(char *chaine, int longueur) {
             viderBuffer();
         }
 
-        return 1; // Tout s'est bien passé
+        return 1;
     } else {
-        viderBuffer(); // vider là aussi le "buffer" par sécurité
-        return 0;      // Y a eu une erreur
+        viderBuffer();
+        return 0;     
     }
 }
 

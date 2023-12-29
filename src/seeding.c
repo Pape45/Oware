@@ -1,3 +1,13 @@
+/**
+ * Implémentation de la logique de semaille. 
+ * 
+ * Principe : Tant qu'il reste des boules dans le trou que le joueur a décidé de jouer, on va semer. La question est de savou-ir si on sème chez nous ou l'adversaire. On va utiliser une combinaison binaire de variable identifiant le joueur courant et l'adversaire ( ex : i & checkI sont pour le joueur courant ). Ces deux variables nous permettent de savoir en temps réel si on a dépassé l'index du tableau ( ex : i > 5 ) ou bien savoir quelle partie on doit semer ( ex : checkI nous dit qu'on est encore de semer le joueur courant ).
+ *  
+ * Si on finit la semaille chez l'adversaire, alors isTheRightCase passe à true et on pourra ainsi passer à la phase de récolte s'il y a lieu.
+ * 
+ * On oublie pas de réinitialiser les variables i & j quand on repasse une n-ième fois sur telle partie d'un joueur et d'inverser les variables check pour valider la semaille chez le joueur. 
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -5,18 +15,22 @@
 #include "seeding.h"
 #include "tools.h"
 
+#define MAX_HOLE_INDEX 5
+#define MIN_HOLE_INDEX 0
+
 int seedingStage(player* currentPlayer, player* opponent, bool* isTheRightCase) {
-    int holeValue, realHoleIndex, holeFillingStop, holeFillingStart, checkOverFilling;
-    int i = 0;
+    int holeValue, realHoleIndex;
+    int i, j, remainingBalls;
     bool isValidHoleIndex = false, isEmptyHole = false;
-    int rightIndex;
+    bool checkI = 1, checkJ = 0;
+
 
     printf("%s, Quelle case voulait-vous jouer ? : ", currentPlayer->name);
     holeValue = lireInt();
 
     do {
         realHoleIndex = holeValue - 1;
-        isValidHoleIndex = holeValue < 1 || holeValue > 6 ? true : false;
+        isValidHoleIndex = !(1 <= holeValue && holeValue <= 6);
 
         if (isValidHoleIndex) {
             printf("\nVeuillez rentrer un numéro de trou valide : ");
@@ -31,105 +45,60 @@ int seedingStage(player* currentPlayer, player* opponent, bool* isTheRightCase) 
         }
     } while (isEmptyHole || isValidHoleIndex);
 
-    checkOverFilling = realHoleIndex + currentPlayer->hole[realHoleIndex];
+    remainingBalls = currentPlayer->hole[realHoleIndex];
 
-    if (checkOverFilling < 6) {
-        rightIndex = seeding(1, realHoleIndex, currentPlayer, opponent, isTheRightCase);
-    } else if (checkOverFilling >= 6 && checkOverFilling < 12) {
-        rightIndex = seeding(2, realHoleIndex, currentPlayer, opponent, isTheRightCase);
-    } else if (checkOverFilling >= 12 && checkOverFilling < 18) {
-        rightIndex = seeding(3, realHoleIndex, currentPlayer, opponent, isTheRightCase);
-    } else {
-        rightIndex = seeding(4, realHoleIndex, currentPlayer, opponent, isTheRightCase);
+    i = realHoleIndex + 1;
+    j = MAX_HOLE_INDEX;
+
+    if (i > 5) {
+        checkI = false;
+        checkJ = true;
     }
 
-    return rightIndex;
-}
-
-int seeding(int option, int realHoleIndex, player *currentPlayer, player *opponent, bool* isTheRightCase) {
-    int holeFillingStart, holeFillingStop, indexToEscape;
-    int remainingBalls = currentPlayer->hole[realHoleIndex];
-    int i;
-
-    if (option == 1) {
-        holeFillingStart = realHoleIndex + 1;
-        holeFillingStop = realHoleIndex + currentPlayer->hole[realHoleIndex];
-
-        for (i = holeFillingStart; i <= holeFillingStop; i++) {
-            currentPlayer->hole[i]++;
-        }
-    } else if (option == 2) {
-        holeFillingStart = realHoleIndex + 1;
-        holeFillingStop = 5;
-
-        for (i = holeFillingStart; i <= holeFillingStop; i++) {
-            currentPlayer->hole[i]++;
-            remainingBalls--;
-        }
-
-        holeFillingStart = 5;
-        holeFillingStop = 5 - remainingBalls;
-
-        for (i = holeFillingStart; i > holeFillingStop; i--) {
-            opponent->hole[i]++;
-        }
-
-        *isTheRightCase = true;
-
-    } else if (option == 3) {
-        holeFillingStart = realHoleIndex + 1;
-        holeFillingStop = 5;
-        indexToEscape = realHoleIndex;
-
-        for (i = holeFillingStart; i <= holeFillingStop; i++) {
-            currentPlayer->hole[i]++;
-            remainingBalls--;
-        }
-
-        for (i = 5; i >= 0; i--) {
-            opponent->hole[i]++;
-            remainingBalls--;
-        }
-
-        printf("Remaining : %d", remainingBalls);
-
-        for (i = 0; i < remainingBalls; i++) {
-            currentPlayer->hole[i]++;
-        }
-    } else {
-        holeFillingStart = realHoleIndex + 1;
-        holeFillingStop = 5;
-        indexToEscape = realHoleIndex;
-
-        for (i = holeFillingStart; i <= holeFillingStop; i++) {
-            currentPlayer->hole[i]++;
-            remainingBalls--;
-        }
-
-        for (i = 5; i >= 0; i--) {
-            opponent->hole[i]++;
-            remainingBalls--;
-        }
-
-        printf("\nremaining : %d\n", remainingBalls);
-        for (i = 0; i < 5; i++) {
+    while (remainingBalls) {
+        if (i <= 5 && checkI) {
             if (i == realHoleIndex) {
+                i++;
                 continue;
-            } else {
-                currentPlayer->hole[i]++;
-                remainingBalls--;
+            }
+            currentPlayer->hole[i]++;
+            i++;
+            remainingBalls--;
+            if (i <= 5 && !remainingBalls) {
+                *isTheRightCase = false;
+            } else if (i > 5 && remainingBalls) {
+                checkJ = true;
+                checkI = false;
+                j = MAX_HOLE_INDEX;
+            }
+        } else if (j >= 0 && checkJ) {
+            opponent->hole[j]++;
+            j--;
+            remainingBalls--;          
+            if (j >= 0 && !remainingBalls) {
+                *isTheRightCase = true;
+            } else if (j < 0 && remainingBalls) {
+                checkI = true;
+                checkJ = false;
+                i = 0;
             }
         }
-        
-        holeFillingStop = 5 - remainingBalls;
-
-        for (i = 5; i > holeFillingStop; i--) {
-            opponent->hole[i]++;
-        }
-
-        *isTheRightCase = true;
     }
 
     currentPlayer->hole[realHoleIndex] = 0;
-    return ++holeFillingStop;
+    return ++j;
 }
+
+// void getOpponentStatus(player opponent) {
+//     for (int i = 0; i < 5; i++) {
+//         if (opponent.hole[i] > 0) {
+//             return false;
+//         } 
+//     }
+
+//     return true;
+// }
+
+// void checkPossiblePlay() {
+
+// }
