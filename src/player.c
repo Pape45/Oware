@@ -15,13 +15,8 @@ void initializePlayers(player* player1, player* player2) {
 
     for(int i = 0; i < 6; i++) {
         player1->hole[i] = 3;
-        player2->hole[i] = 0;
+        player2->hole[i] = 3;
     }
-
-    player1->score = 0; 
-    player2->score = 0;
-    player2->hole[5] = 1;
-
 
     strcpy(player1->name, "pape");
     strcpy(player2->name, "PC");

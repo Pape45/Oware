@@ -20,15 +20,15 @@ int main(int argc, const char *argv[]) {
     player* player2 = malloc(sizeof(player));
     int* turnWithoutHarvest = malloc(sizeof(int));
     bool* isTheRightHole = malloc(sizeof(bool));
-    int gameTurn = 0;
     *turnWithoutHarvest = 0;
+    int gameTurn = 0;
 
     if (player1 == NULL || player2 == NULL || turnWithoutHarvest == NULL || isTheRightHole == NULL) {
         free(player1);
         free(player2);
         free(turnWithoutHarvest);
         free(isTheRightHole);
-        
+
         fprintf(stderr, "Erreur d'affectation mémoire !\n");
         return 0;
     }
