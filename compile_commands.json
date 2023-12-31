@@ -1,0 +1,80 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-Iinclude",
+      "-c",
+      "-o",
+      "src/endGame.o",
+      "src/endGame.c"
+    ],
+    "directory": "/Users/papemamadoudiagne/Documents/IATIC_3/SEMESTRE_1/PROJET ALGO/Oware",
+    "file": "/Users/papemamadoudiagne/Documents/IATIC_3/SEMESTRE_1/PROJET ALGO/Oware/src/endGame.c",
+    "output": "/Users/papemamadoudiagne/Documents/IATIC_3/SEMESTRE_1/PROJET ALGO/Oware/src/endGame.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-Iinclude",
+      "-c",
+      "-o",
+      "src/harvest.o",
+      "src/harvest.c"
+    ],
+    "directory": "/Users/papemamadoudiagne/Documents/IATIC_3/SEMESTRE_1/PROJET ALGO/Oware",
+    "file": "/Users/papemamadoudiagne/Documents/IATIC_3/SEMESTRE_1/PROJET ALGO/Oware/src/harvest.c",
+    "output": "/Users/papemamadoudiagne/Documents/IATIC_3/SEMESTRE_1/PROJET ALGO/Oware/src/harvest.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-Iinclude",
+      "-c",
+      "-o",
+      "src/oware.o",
+      "src/oware.c"
+    ],
+    "directory": "/Users/papemamadoudiagne/Documents/IATIC_3/SEMESTRE_1/PROJET ALGO/Oware",
+    "file": "/Users/papemamadoudiagne/Documents/IATIC_3/SEMESTRE_1/PROJET ALGO/Oware/src/oware.c",
+    "output": "/Users/papemamadoudiagne/Documents/IATIC_3/SEMESTRE_1/PROJET ALGO/Oware/src/oware.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-Iinclude",
+      "-c",
+      "-o",
+      "src/player.o",
+      "src/player.c"
+    ],
+    "directory": "/Users/papemamadoudiagne/Documents/IATIC_3/SEMESTRE_1/PROJET ALGO/Oware",
+    "file": "/Users/papemamadoudiagne/Documents/IATIC_3/SEMESTRE_1/PROJET ALGO/Oware/src/player.c",
+    "output": "/Users/papemamadoudiagne/Documents/IATIC_3/SEMESTRE_1/PROJET ALGO/Oware/src/player.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-Iinclude",
+      "-c",
+      "-o",
+      "src/seeding.o",
+      "src/seeding.c"
+    ],
+    "directory": "/Users/papemamadoudiagne/Documents/IATIC_3/SEMESTRE_1/PROJET ALGO/Oware",
+    "file": "/Users/papemamadoudiagne/Documents/IATIC_3/SEMESTRE_1/PROJET ALGO/Oware/src/seeding.c",
+    "output": "/Users/papemamadoudiagne/Documents/IATIC_3/SEMESTRE_1/PROJET ALGO/Oware/src/seeding.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-Iinclude",
+      "-c",
+      "-o",
+      "src/tools.o",
+      "src/tools.c"
+    ],
+    "directory": "/Users/papemamadoudiagne/Documents/IATIC_3/SEMESTRE_1/PROJET ALGO/Oware",
+    "file": "/Users/papemamadoudiagne/Documents/IATIC_3/SEMESTRE_1/PROJET ALGO/Oware/src/tools.c",
+    "output": "/Users/papemamadoudiagne/Documents/IATIC_3/SEMESTRE_1/PROJET ALGO/Oware/src/tools.o"
+  }
+]

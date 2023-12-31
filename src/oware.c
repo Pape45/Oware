@@ -19,11 +19,17 @@ int main(int argc, const char *argv[]) {
     player* player1 = malloc(sizeof(player)); 
     player* player2 = malloc(sizeof(player));
     int* turnWithoutHarvest = malloc(sizeof(int));
-    bool* isTheRightIndex = malloc(sizeof(bool));
+    bool* isTheRightHole = malloc(sizeof(bool));
     int gameTurn = 0;
+    *turnWithoutHarvest = 0;
 
-    if (player1 == NULL || player2 == NULL) {
-        fprintf(stderr, "Memory allocation failed, please debug :)\n");
+    if (player1 == NULL || player2 == NULL || turnWithoutHarvest == NULL || isTheRightHole == NULL) {
+        free(player1);
+        free(player2);
+        free(turnWithoutHarvest);
+        free(isTheRightHole);
+        
+        fprintf(stderr, "Erreur d'affectation mémoire !\n");
         return 0;
     }
     
@@ -31,37 +37,33 @@ int main(int argc, const char *argv[]) {
     
     do {
         gameTurn++;
-        if (!(letsPlay(player1, player2, turnWithoutHarvest, isTheRightIndex, gameTurn) || letsPlay(player2, player1, turnWithoutHarvest, isTheRightIndex, gameTurn))) {
-            /**
-             * Pas de récolte pour ce tour
-            */
-        
-            *turnWithoutHarvest = *turnWithoutHarvest + 1;
-        } else {
-            *turnWithoutHarvest = 0;
-        }
-    } while (!endGame(player1, player2, turnWithoutHarvest, gameTurn));
+        *turnWithoutHarvest = letsPlay_Aux(player1, player2, isTheRightHole, gameTurn, turnWithoutHarvest);
+    } while (!endGame(player1, player2, *turnWithoutHarvest, gameTurn));
 
     free(player1);
     free(player2);
     free(turnWithoutHarvest);
-    free(isTheRightIndex);
+    free(isTheRightHole);
 
     return 1;
 }
 
-int letsPlay(player* player1, player* player2, int* turnWithoutHarvest, bool* isTheRightIndex,int gameTurn) {
+int letsPlay(player* player1, player* player2, bool* isTheRightHole, int gameTurn) {
     int rightHoleToHarvest = 0;
-    *isTheRightIndex = false;
+    *isTheRightHole = false;
     
     displayGame(player1, player2, gameTurn);
-    rightHoleToHarvest = seedingStage(player1, player2, isTheRightIndex);
+    rightHoleToHarvest = seedingStage(player1, player2, isTheRightHole);
     
-    if (*isTheRightIndex) {
+    if (*isTheRightHole) {
         return harvestStage(player1, player2, rightHoleToHarvest);
     }
 
     return 0;
+}
+
+int letsPlay_Aux(player* current, player* opponent, bool* isTheRightHole, int gameTurn, const int* turnWithoutHarvest) {
+    return letsPlay(current, opponent, isTheRightHole, gameTurn) || letsPlay(opponent, current, isTheRightHole, gameTurn) ? 0 : (*turnWithoutHarvest + 1);
 }
 
 void displayGame(const player* currentPlayer, const player* opponent, int currentTurn) {

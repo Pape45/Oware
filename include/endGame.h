@@ -3,6 +3,6 @@
 
 #include "player.h"
 
-bool endGame(player* player1, player* player2, int* turnWithoutHarvest, int gameTurn);
+bool endGame(player* player1, player* player2, int turnWithoutHarvest, int gameTurn);
 
 #endif
