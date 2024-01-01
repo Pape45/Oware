@@ -43,7 +43,8 @@ int main(int argc, const char *argv[]) {
     gameChoice = initializePlayers(player1, player2);
     
     firstPlay = rand() % 2;
-
+    firstPlay = 0;
+    
     if (firstPlay) {
         player temp = *player1;
         *player1 = *player2;

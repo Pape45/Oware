@@ -17,7 +17,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <time.h>
-#include "player.h"
+#include "../include/player.h"
 #include "seeding.h"
 #include "tools.h"
 #include "endGame.h"
@@ -98,6 +98,11 @@ int seed(player* currentPlayer, player* opponent, bool* isTheRightHole, int real
     while (remainingBalls) {
         if (i <= 5 && checkI) {
             if (i == realHoleIndex) {
+                if (i == 5) {
+                    checkJ = true;
+                    checkI = false;
+                    j = MAX_HOLE_INDEX;
+                }
                 i++;
                 continue;
             }
@@ -124,7 +129,6 @@ int seed(player* currentPlayer, player* opponent, bool* isTheRightHole, int real
             }
         }
     }
-
     currentPlayer->hole[realHoleIndex] = 0;
     return ++j;
 }
@@ -202,7 +206,6 @@ int makeComputerMove(const player* PC, const player* opponent) {
         rightHoleToHarvest = seed(PC_temp, opponent_temp, isTheRightHole, i);
         if (*isTheRightHole && harvestStage(PC_temp, opponent_temp, rightHoleToHarvest))
         {
-            printf("\nScore : %d", PC_temp->score);
             checkBestPlay = true;
             if (PC_temp->score > currentScore) {
                 moveChoice = i;
