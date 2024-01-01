@@ -7,5 +7,6 @@ int seedingStage(player* currentPlayer, player* opponent, bool* isTheRightHole, 
 int seed(player* currentPlayer, player* opponent, bool* isTheRightHole, int realHoleIndex);
 bool getOpponentStatus(player opponent);
 bool checkPossiblePlay(const player* currentPlayer, const player* opponent, int* checkTab, int realHoleIndex, bool *specialEndGame);
+int makeComputerMove(const player* PC, const player* opponent);
 
 #endif

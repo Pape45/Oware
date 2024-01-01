@@ -8,6 +8,8 @@
  * On oublie pas de réinitialiser les variables i & j quand on repasse une n-ième fois sur telle partie d'un joueur et d'inverser les variables check pour valider la semaille chez le joueur. 
  * 
  * Ajout du prof : Si possible, le joueur courant "offre" des boules à l'adversaire si toutes ses cases sont vides
+ * 
+ * Pour la version du "PC INTELLIGENT", on va simuler le gain obtenu par chaque coup. Si le coup donne des points, on retourne alors le coup. Si on en a pas trouvé, on joue un coup au hasard dont les cases ne sont pas vides.
 */
 
 #include <stdio.h>
@@ -18,6 +20,7 @@
 #include "seeding.h"
 #include "tools.h"
 #include "endGame.h"
+#include "harvest.h"
 
 #define MAX_HOLE_INDEX 5
 #define MIN_HOLE_INDEX 0
@@ -30,9 +33,12 @@ int seedingStage(player* currentPlayer, player* opponent, bool* isTheRightHole, 
     bool pass;
     int* checkTab = malloc(sizeof(int) * 6);
 
-    // if (gameChoice == 2 && !strcmp(currentPlayer->name, "PC")) {
-    //     makeComputerMove();
-    // }
+    if (gameChoice == 2 && !strcmp(currentPlayer->name, "PC")) {
+        int computerMove = makeComputerMove(currentPlayer, opponent);
+        printf("\nPC joue : %d\n", computerMove + 1);
+        free(checkTab);
+        return seed(currentPlayer, opponent, isTheRightHole, computerMove);
+    }
 
     printf("%s, Quelle case voulait-vous jouer ? : ", currentPlayer->name);
     holeValue = lireInt();
@@ -149,6 +155,8 @@ bool checkPossiblePlay(const player* currentPlayer, const player* opponent, int*
     for (int i = 0; i < 6; i++) {
         *currentPlayer_temp = *currentPlayer;
         *opponent_temp = *opponent;
+        if (currentPlayer->hole[i] == 0) 
+            continue;
         seed(currentPlayer_temp, opponent_temp, isTheRightHole, i);
         if (!getOpponentStatus(*opponent_temp)) {
             cpt++;
@@ -175,6 +183,40 @@ bool checkPossiblePlay(const player* currentPlayer, const player* opponent, int*
     }
 }
 
-// void makeComputerMove() {
-    
-// }
+int makeComputerMove(const player* PC, const player* opponent) {
+    bool checkBestPlay = false;
+    player* PC_temp = malloc(sizeof(player));
+    player* opponent_temp = malloc(sizeof(player));
+    bool* isTheRightHole = malloc(sizeof(bool));
+    int rightHoleToHarvest = 0;
+    int moveChoice;
+
+    for (int i = 0; i < 6; i++) {
+        *PC_temp = *PC;
+        *opponent_temp = *opponent;
+        if (PC_temp->hole[i] == 0)
+            continue;
+        rightHoleToHarvest = seed(PC_temp, opponent_temp, isTheRightHole, i);
+        if (*isTheRightHole && harvestStage(PC_temp, opponent_temp, rightHoleToHarvest))
+        {
+            checkBestPlay = true;
+            moveChoice = i;
+            break;
+        }
+    }
+
+    if (!checkBestPlay) {
+        for (int i = 0; i < 6; i++) {
+            if (PC->hole[i] != 0) {
+                moveChoice = i;
+                break;
+            }
+        }
+    }
+
+    free(PC_temp);
+    free(opponent_temp);
+    free(isTheRightHole);
+
+    return moveChoice;
+}
