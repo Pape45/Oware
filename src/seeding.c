@@ -16,6 +16,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
+#include <time.h>
 #include "player.h"
 #include "seeding.h"
 #include "tools.h"
@@ -26,6 +27,7 @@
 #define MIN_HOLE_INDEX 0
 
 int seedingStage(player* currentPlayer, player* opponent, bool* isTheRightHole, int gameChoice, bool* specialEndGame) {
+    srand(time(NULL));
     int holeValue;
     int realHoleIndex;
     bool isValidHoleIndex = false;
@@ -206,12 +208,9 @@ int makeComputerMove(const player* PC, const player* opponent) {
     }
 
     if (!checkBestPlay) {
-        for (int i = 0; i < 6; i++) {
-            if (PC->hole[i] != 0) {
-                moveChoice = i;
-                break;
-            }
-        }
+        do {
+            moveChoice = rand() % 6;
+        } while (PC->hole[moveChoice] == 0);
     }
 
     free(PC_temp);
