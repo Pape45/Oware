@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 #include "player.h"
 #include "seeding.h"
 #include "tools.h"
@@ -21,7 +22,7 @@
 #define MAX_HOLE_INDEX 5
 #define MIN_HOLE_INDEX 0
 
-int seedingStage(player* currentPlayer, player* opponent, bool* isTheRightHole) {
+int seedingStage(player* currentPlayer, player* opponent, bool* isTheRightHole, int gameChoice, bool* specialEndGame) {
     int holeValue;
     int realHoleIndex;
     bool isValidHoleIndex = false;
@@ -29,48 +30,42 @@ int seedingStage(player* currentPlayer, player* opponent, bool* isTheRightHole) 
     bool pass;
     int* checkTab = malloc(sizeof(int) * 6);
 
+    // if (gameChoice == 2 && !strcmp(currentPlayer->name, "PC")) {
+    //     makeComputerMove();
+    // }
 
     printf("%s, Quelle case voulait-vous jouer ? : ", currentPlayer->name);
     holeValue = lireInt();
 
     do {
+        *specialEndGame = false;
         pass = true;
         realHoleIndex = holeValue - 1;
         isValidHoleIndex = !(1 <= holeValue && holeValue <= 6);
-        isEmptyHole = (currentPlayer->hole[realHoleIndex] == 0);
+        isEmptyHole = 0;
 
         if (isValidHoleIndex) {
             printf("\nVeuillez rentrer un numéro de trou valide : ");
             holeValue = lireInt();
-        } else if (isEmptyHole) {
+        } else if (currentPlayer->hole[realHoleIndex] == 0) {
+            isEmptyHole = 1;
             printf("\nCe trou est vide. Veuillez en choisir un autre : ");
             holeValue = lireInt();
-        } else if (!getOpponentStatus(*opponent)) {
-            if (checkPossiblePlay(*currentPlayer, *opponent, checkTab)) {
-                for (int k = 0; k < 6; k++) {
-                    pass = false;
-                    if (realHoleIndex == k && checkTab[k]) {
-                        pass = true;
-                        break;
-                    }
-                }
-            } else {
-                endGame(currentPlayer, opponent, 20, 0);
-                printf("\nExplication : Tous les cases du joueur adversaire sont à 0 et %s n'a pas la possibilité de jouer un coup lui permettant d'obtenir une boule !\n", currentPlayer->name);
-                exit(EXIT_SUCCESS);
-            }
-
-            if (!pass) {
-                printf("\nVous devez jouer un coup qui permet à l'adversaire d'avoir au moins une boule chez lui : ");
-                holeValue = lireInt();
-            }
+        } else if (!getOpponentStatus(*opponent) && !checkPossiblePlay(currentPlayer, opponent, checkTab, realHoleIndex, specialEndGame)) {
+            pass = false;
+            printf("\nVous devez jouer un coup qui permet à l'adversaire d'avoir au moins une boule chez lui : ");
+            holeValue = lireInt();
+        }
+        
+        if (*specialEndGame) {
+            *isTheRightHole = false;
+            return 0;
         }
 
         if (!isValidHoleIndex && !isEmptyHole && pass) {
             break;
         }
     } while (1);
-
 
     free(checkTab);
     return seed(currentPlayer, opponent, isTheRightHole, realHoleIndex);
@@ -101,7 +96,7 @@ int seed(player* currentPlayer, player* opponent, bool* isTheRightHole, int real
             currentPlayer->hole[i]++;
             i++;
             remainingBalls--;
-            if (i <= 5 && !remainingBalls) {
+            if (i <= 6 && !remainingBalls) {
                 *isTheRightHole = false;
             } else if (i > 5 && remainingBalls) {
                 checkJ = true;
@@ -112,7 +107,7 @@ int seed(player* currentPlayer, player* opponent, bool* isTheRightHole, int real
             opponent->hole[j]++;
             j--;
             remainingBalls--;          
-            if (j >= 0 && !remainingBalls) {
+            if (j >= -1 && !remainingBalls) {
                 *isTheRightHole = true;
             } else if (j < 0 && remainingBalls) {
                 checkI = true;
@@ -136,7 +131,7 @@ bool getOpponentStatus(player opponent) {
     return false;
 }
 
-bool checkPossiblePlay(player currentPlayer, player opponent, int* checkTab) {
+bool checkPossiblePlay(const player* currentPlayer, const player* opponent, int* checkTab, int realHoleIndex, bool *specialEndGame) {
     player* currentPlayer_temp = malloc(sizeof(player)); 
     player* opponent_temp = malloc(sizeof(player));
     bool* isTheRightHole = malloc(sizeof(bool));
@@ -152,8 +147,8 @@ bool checkPossiblePlay(player currentPlayer, player opponent, int* checkTab) {
     }
 
     for (int i = 0; i < 6; i++) {
-        *currentPlayer_temp = currentPlayer;
-        *opponent_temp = opponent;
+        *currentPlayer_temp = *currentPlayer;
+        *opponent_temp = *opponent;
         seed(currentPlayer_temp, opponent_temp, isTheRightHole, i);
         if (!getOpponentStatus(*opponent_temp)) {
             cpt++;
@@ -166,5 +161,20 @@ bool checkPossiblePlay(player currentPlayer, player opponent, int* checkTab) {
     free(opponent_temp);
     free(isTheRightHole);
 
-    return (cpt != 6);
+    if (cpt != 6) {
+
+        for (int k = 0; k < 6; k++) {
+            if (realHoleIndex == k && checkTab[k]) {
+                return true;
+            }
+        }
+        return false;
+    } else {
+        *specialEndGame = true;
+        return true;
+    }
 }
+
+// void makeComputerMove() {
+    
+// }

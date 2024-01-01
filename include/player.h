@@ -8,6 +8,7 @@ typedef struct player{
 } player;
 
 
-void initializePlayers(player* player1, player* player2);
+int initializePlayers(player* player1, player* player2);
+void saveScores(const player* player1, const player* player2);
 
 #endif

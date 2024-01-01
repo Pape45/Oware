@@ -9,55 +9,42 @@
 #include "player.h"
 #include "oware.h"
 
-bool endGame(player* player1, player* player2, int turnWithoutHarvest, int gameTurn) {
-    player* winner;
-
-    if (player1->score >= 19 || player2->score >= 19) {
-        displayGame(player1, player2, gameTurn);
-        if (player1->score >= 19) {
-            printf("\nFélicitations %s ! Tu as gagné avec un score de %d :)\n", player1->name, player1->score);
-        } else {
-            printf("\nFélicitations %s ! Tu as gagné avec un score de %d :)\n", player2->name, player2->score);
-        }
-
+bool endGame(const player* player1, const player* player2, int turnWithoutHarvest, int gameTurn, bool* specialEndGame) {
+    
+    if (player1->score >= 19 || player2->score >= 19 || turnWithoutHarvest == 20 || (checkEmptyPlayer(player1, player2) && *specialEndGame)) {
+        displayEndGame(player1, player2, gameTurn);
         return true;
-    } else if (turnWithoutHarvest == 20) {
+    }
+
+    return false;
+}
+
+bool checkEmptyPlayer(const player* player1, const player* player2) {
+    int player1Empty = 1;
+    int player2Empty = 1;
+
+    for (int i = 0; i < 6; i++) {
+        if (player1->hole[i] > 0) {
+            player1Empty = 0;
+        }
+    }
+
+    for (int j = 0; j < 6; j++) {
+        if (player2->hole[j] > 0) {
+            player2Empty = 0;
+        }
+    }
+
+    return player1Empty || player2Empty;
+}
+
+void displayEndGame(const player* player1, const player* player2, int gameTurn) {
+        player winner;
         displayGame(player1, player2, gameTurn);
         if (player1->score == player2->score) {
             printf("\nFin du jeu ! On a un match nul :)\n");
         } else {
-            winner = player1->score > player2->score ? player1 : player2;
-            printf("\nFélicitations %s ! Tu as gagné avec un score de %d :)\n", winner->name, winner->score);
+            winner = player1->score > player2->score ? *player1 : *player2;
+            printf("\nFélicitations %s ! Tu as gagné avec un score de %d :)\n", winner.name, winner.score);
         }
-        
-        return true;
-    }  else {
-        int player1Empty = 1;
-        int player2Empty = 1;
-
-        for (int i = 0; i < 6; i++) {
-            if (player1->hole[i] > 0) {
-                player1Empty = 0;
-            }
-        }
-
-        for (int j = 0; j < 6; j++) {
-            if (player2->hole[j] > 0) {
-                player2Empty = 0;
-            }
-        }
-
-        if (player1Empty || player2Empty) {
-            displayGame(player1, player2, gameTurn);
-            if (player1->score == player2->score) {
-                printf("\nFin du jeu ! On a un match nul :)\n");
-            } else {
-                winner = player1->score > player2->score ? player1 : player2;
-                printf("\nFélicitations %s ! Tu as gagné avec un score de %d :)\n", winner->name, winner->score);
-            }
-            return true;
-        }
-    }
-
-    return false;
 }
