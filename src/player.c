@@ -20,13 +20,13 @@ int initializePlayers(player* player1, player* player2) {
         gameChoice = lireInt();
     }
     if (gameChoice == 1) {
-        // printf("Joueur 1, veuillez rentrer votre nom : ");
-        // lire(player1->name, 100);
-        // printf("Joueur 2, veuillez rentrer votre nom : ");
-        // lire(player2->name, 100);
+        printf("Joueur 1, veuillez rentrer votre nom : ");
+        lire(player1->name, 100);
+        printf("Joueur 2, veuillez rentrer votre nom : ");
+        lire(player2->name, 100);
     } else {
-        // printf("Joueur 1, veuillez rentrer votre nom : ");
-        // lire(player1->name, 100);
+        printf("Joueur 1, veuillez rentrer votre nom : ");
+        lire(player1->name, 100);
         strcpy(player2->name, "PC");
     }
 
@@ -34,11 +34,6 @@ int initializePlayers(player* player1, player* player2) {
         player1->hole[i] = 3;
         player2->hole[i] = 3;
     }
-
-    // player1->hole[0] = 12;
-
-    strcpy(player1->name, "pape");
-    strcpy(player2->name, "PC");
 
     return gameChoice;
 }
