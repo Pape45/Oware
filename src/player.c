@@ -36,10 +36,11 @@ int initializePlayers(player* player1, player* player2) {
     }
 
     // player1->hole[3] = 0;
-    // player1->hole[4] = 0;
-    // player1->hole[5] = 0;
+    player1->hole[3] = 2;
+    player1->hole[5] = 1;
     // player1->hole[3] = 8; 
     // player2->hole[4] = 1;
+
 
     strcpy(player1->name, "pape");
     strcpy(player2->name, "PC");

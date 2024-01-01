@@ -191,6 +191,7 @@ int makeComputerMove(const player* PC, const player* opponent) {
     player* opponent_temp = malloc(sizeof(player));
     bool* isTheRightHole = malloc(sizeof(bool));
     int rightHoleToHarvest = 0;
+    int currentScore = 0;
     int moveChoice;
 
     for (int i = 0; i < 6; i++) {
@@ -201,9 +202,11 @@ int makeComputerMove(const player* PC, const player* opponent) {
         rightHoleToHarvest = seed(PC_temp, opponent_temp, isTheRightHole, i);
         if (*isTheRightHole && harvestStage(PC_temp, opponent_temp, rightHoleToHarvest))
         {
+            printf("\nScore : %d", PC_temp->score);
             checkBestPlay = true;
-            moveChoice = i;
-            break;
+            if (PC_temp->score > currentScore) {
+                moveChoice = i;
+            }
         }
     }
 
